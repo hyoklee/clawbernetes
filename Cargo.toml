@@ -1,0 +1,142 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/clawnode",
+    "crates/claw-cli",
+    "crates/claw-compute",
+    "crates/claw-metrics",
+    "crates/claw-proto",
+    "crates/claw-persist",
+    "crates/claw-config",
+    "crates/claw-deploy",
+    "crates/claw-secrets",
+    "crates/claw-storage",
+    "crates/claw-auth",
+    "crates/claw-autoscaler",
+    "crates/claw-network",
+    "crates/claw-scheduler",
+    "crates/claw-ingress",
+    "crates/claw-identity",
+    "crates/molt-core",
+    "crates/molt-p2p",
+    "crates/molt-token",
+    "crates/molt-agent",
+    "crates/molt-market",
+    "crates/molt-attestation",
+    "crates/claw-wireguard",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.93"
+license = "MIT"
+repository = "https://github.com/clawbernetes/clawbernetes"
+authors = ["Clawbernetes Contributors"]
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1.43", features = ["full"] }
+tokio-util = { version = "0.7", features = ["codec"] }
+futures = "0.3"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+prost = "0.13"
+prost-types = "0.13"
+
+# Networking
+tokio-tungstenite = { version = "0.24", features = ["native-tls"] }
+quinn = "0.11"
+rustls = "0.23"
+
+# Crypto
+ed25519-dalek = { version = "2.1", features = ["serde", "rand_core"] }
+blake3 = "1.5"
+rand = "0.8"
+bs58 = "0.5"
+
+# Error handling
+thiserror = "2.0"
+anyhow = "1.0"
+
+# Logging/tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# CLI
+clap = { version = "4.5", features = ["derive", "env"] }
+
+# Testing
+proptest = "1.5"
+criterion = "0.5"
+test-case = "3.3"
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# UUID
+uuid = { version = "1.11", features = ["v4", "serde"] }
+
+# Validation utilities
+once_cell = "1.19"
+regex = "1.10"
+
+# Concurrency
+parking_lot = "0.12"
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+missing_docs = "warn"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+# nursery has too many false positives for now
+# nursery = { level = "warn", priority = -1 }
+unwrap_used = "deny"
+expect_used = "warn"  # Allow in tests, warn in prod
+panic = "deny"
+todo = "deny"
+unimplemented = "deny"
+# Allow common pedantic false positives
+must_use_candidate = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+module_name_repetitions = "allow"
+too_many_lines = "allow"
+cognitive_complexity = "allow"
+# Allow cast warnings (often false positives in systems code)
+cast_possible_truncation = "allow"
+cast_sign_loss = "allow"
+cast_precision_loss = "allow"
+cast_possible_wrap = "allow"
+# Allow doc formatting issues
+doc_overindented_list_items = "allow"
+# Allow unused self in trait impls (common pattern)
+unused_self = "allow"
+# Allow struct field naming
+struct_field_names = "allow"
+# Allow common patterns
+match_same_arms = "allow"
+unnested_or_patterns = "allow"
+unnecessary_wraps = "allow"
+items_after_statements = "allow"
+needless_for_each = "allow"
+needless_range_loop = "allow"
+needless_continue = "allow"
+unused_async = "allow"
+default_trait_access = "allow"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[profile.test]
+opt-level = 1

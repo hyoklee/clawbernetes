@@ -1,0 +1,97 @@
+[package]
+name = "clawnode"
+version.workspace = true
+edition.workspace = true
+description = "Clawbernetes GPU node agent - connects to OpenClaw gateway"
+license = "Apache-2.0"
+repository = "https://github.com/clawbernetes/clawbernetes"
+
+[features]
+default = []
+docker = ["dep:claw-compute"]
+metrics = ["dep:claw-metrics"]
+molt = ["dep:molt-core", "dep:molt-p2p", "dep:molt-agent", "dep:molt-market", "dep:molt-attestation"]
+network = ["dep:hyper", "dep:hyper-util", "dep:http-body-util", "dep:bytes"]
+full = ["docker", "metrics", "molt", "network"]
+
+[[bin]]
+name = "clawnode"
+path = "src/main.rs"
+
+[dependencies]
+# Internal
+claw-proto = { path = "../claw-proto" }
+claw-persist = { path = "../claw-persist" }
+claw-config = { path = "../claw-config" }
+claw-deploy = { path = "../claw-deploy" }
+claw-secrets = { path = "../claw-secrets" }
+claw-storage = { path = "../claw-storage" }
+claw-auth = { path = "../claw-auth" }
+claw-autoscaler = { path = "../claw-autoscaler" }
+claw-network = { path = "../claw-network" }
+claw-scheduler = { path = "../claw-scheduler" }
+claw-ingress = { path = "../claw-ingress" }
+claw-identity = { path = "../claw-identity" }
+claw-compute = { path = "../claw-compute", features = ["container-runtime"], optional = true }
+claw-metrics = { path = "../claw-metrics", optional = true }
+molt-core = { path = "../molt-core", optional = true }
+molt-p2p = { path = "../molt-p2p", optional = true }
+molt-agent = { path = "../molt-agent", optional = true }
+molt-market = { path = "../molt-market", optional = true }
+molt-attestation = { path = "../molt-attestation", optional = true }
+
+# Async runtime
+tokio = { version = "1.43", features = ["full"] }
+tokio-tungstenite = { version = "0.26", features = ["native-tls"] }
+futures-util = "0.3"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# CLI
+clap = { version = "4.5", features = ["derive"] }
+
+# Utilities
+uuid = { version = "1.11", features = ["v4"] }
+chrono = { version = "0.4", features = ["serde"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+thiserror = "2.0"
+anyhow = "1.0"
+
+# System info
+sysinfo = "0.33"
+
+# HTTP client (for initial registration)
+reqwest = { version = "0.12", features = ["json", "native-tls"] }
+
+# URL parsing
+url = "2.5"
+
+# Hostname detection
+hostname = "0.4"
+
+# Directories
+dirs = "6.0"
+
+# IP/Network types
+ipnet = "2.10"
+
+# HTTP server for ingress proxy (network feature)
+hyper = { version = "1.5", features = ["server", "http1", "http2"], optional = true }
+hyper-util = { version = "0.1", features = ["tokio", "server-auto", "server-graceful"], optional = true }
+http-body-util = { version = "0.1", optional = true }
+bytes = { version = "1", optional = true }
+
+# Cryptography for device signing
+ed25519-dalek = { version = "2.1", features = ["rand_core"] }
+rand_core = { version = "0.6", features = ["getrandom"] }
+sha2 = "0.10"
+base64 = "0.22"
+ring = "0.17"
+hex = "0.4"
+
+[dev-dependencies]
+tokio-test = "0.4"
+tempfile = "3.14"
