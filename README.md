@@ -146,7 +146,7 @@ openclaw onboard --install-daemon
 ### 2. Build clawnode (on each node machine)
 
 ```bash
-git clone https://github.com/clawbernetes/clawbernetes
+git clone https://github.com/redclawsystems/clawbernetes
 cd clawbernetes
 cargo install --path crates/clawnode
 ```
